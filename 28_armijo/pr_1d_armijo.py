@@ -3,10 +3,10 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-def F1(x):
+def F(x):
     return -2 * np.sin(np.sqrt(abs(x / 2 + 10))) - x * np.sin(np.sqrt(abs(x - 10)))
 
-def dF1(x):
+def dF(x):
     """
     Аналитическая производная f1(x).
     Не определена в x = -20 и x = 10 (особые точки из-за abs).
@@ -43,10 +43,10 @@ def dF1(x):
 
     return term1 + term2 + term3
 
-def F(x):
+def F2(x):
     return x ** 2 - 10 * np.cos(0.5 * np.pi * x) - 110
 
-def dF(x):
+def dF2(x):
     """
     Аналитическая производная f2(x) = x^2 - 10*cos(0.5*pi*x) - 110.
     f2'(x) = 2x + 5*pi*sin(0.5*pi*x)
@@ -83,7 +83,7 @@ def prsearch_1d(f, df, x0, tol=1e-6, max_iter=1000):
         p = -g_old  # направление антиградиента
 
         # Подбор шага
-        alpha = armijo_1d(f, df, x, p, a=1.0, c1=0.1, b=0.5)
+        alpha = armijo_1d(f, df, x, p, a=1.0, c1=0.1, b=0.1)
 
         # Обновление точки
         x_new = x + alpha * p
@@ -111,7 +111,7 @@ def prsearch_1d(f, df, x0, tol=1e-6, max_iter=1000):
 def draw_1d(coords, f, flag):
     """Визуализация траектории оптимизации."""
     fig, ax = plt.subplots(figsize=(10, 6))
-    x_vals = np.linspace(-2, 10, 2000)
+    x_vals = np.linspace(0, 10, 2000)
     y_vals = [f(x) for x in x_vals]
     ax.plot(x_vals, y_vals, 'b-', linewidth=1.5, label='F(x)')
 
@@ -133,7 +133,7 @@ def draw_1d(coords, f, flag):
 
 def main():
     print("Optimizing 1D function F(x) using 1D Polak-Ribiere method with Armijo line search")
-    x0 = 5.0  # начальная точка (скаляр!)
+    x0 = 3.0  # начальная точка (скаляр!)
     tol = 1e-6
 
     xmin, fmin, neval, coords = prsearch_1d(F, dF, x0, tol=tol)

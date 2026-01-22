@@ -5,25 +5,17 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-def F(x):
-    return -2 * np.sin(np.sqrt(abs(x / 2 + 10))) - x * np.sin(np.sqrt(abs(x - 10)))
-
-
-def dF(x):
-    return (-np.cos(np.sqrt(abs(x / 2 + 10))) * (x / 2 + 10)) / (2 * abs(x / 2 + 10) ** (3 / 2)) - (
-        np.cos(np.sqrt(abs(x - 10))) * (x - 10) * x) / (2 * abs(x - 10) ** (3 / 2)) - np.sin(np.sqrt(abs(x - 10)))
-
 # F_HIMMELBLAU is a Himmelblau function
 # 	v = F_HIMMELBLAU(X)
 #	INPUT ARGUMENTS:
 #	X - is 2x1 vector of input variables
 #	OUTPUT ARGUMENTS:
 #	v is a function value
-'''def fH(X):
+def F(X):
     x = X[0]
     y = X[1]
     v = (x ** 2 + y - 11) ** 2 + (x + y ** 2 - 7) ** 2
-    return v'''
+    return v
 
 
 # DF_HIMMELBLAU is a Himmelblau function derivative
@@ -33,14 +25,14 @@ def dF(x):
 #	OUTPUT ARGUMENTS:
 #	v is a derivative function value
 
-'''def dfH(X):
+def dF(X):
     x = X[0]
     y = X[1]
     v = np.copy(X)
     v[0] = 2 * (x ** 2 + y - 11) * (2 * x) + 2 * (x + y ** 2 - 7)
     v[1] = 2 * (x ** 2 + y - 11) + 2 * (x + y ** 2 - 7) * (2 * y)
 
-    return v'''
+    return v
 
 
 # F_ROSENBROCK is a Rosenbrock function
