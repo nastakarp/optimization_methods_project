@@ -8,10 +8,9 @@ def f(x): return x ** 2 - 10 * np.cos(0.3 * np.pi * x) - 20  # Определя�
 
 def df(x): return 2 * x + 3 * np.pi * np.sin(0.3 * np.pi * x)  # Определяет аналитическую производную f'(x).
 '''
-
+#тут нужно поставить интервал (-2,9.9)
 def f1(x):
     return -2 * np.sin(np.sqrt(abs(x / 2 + 10))) - x * np.sin(np.sqrt(abs(x - 10)))
-
 
 def df1(x):
     """
@@ -50,8 +49,7 @@ def df1(x):
 
     return term1 + term2 + term3
 
-
-
+#тут нужно поставить интервал (-2,10)
 def f(x):
     return x ** 2 - 10 * np.cos(0.5 * np.pi * x) - 110
 
