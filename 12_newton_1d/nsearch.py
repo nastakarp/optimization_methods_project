@@ -5,8 +5,6 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import random
 
-import numpy as np
-
 
 def f(x):
     return -2 * np.sin(np.sqrt(abs(x / 2 + 10))) - x * np.sin(np.sqrt(abs(x - 10)))
@@ -121,7 +119,8 @@ def f(x): return x**2 - 10*np.cos(0.3*np.pi*x) - 20
 
 def df(x): return 2*x + 3*np.pi*np.sin(0.3*np.pi*x)
 
-def ddf(x): return 2 + 0.9*(np.pi**2)*np.cos(0.3*np.pi*x)'''
+def ddf(x): return 2 + 0.9*(np.pi**2)*np.cos(0.3*np.pi*x)
+'''
 
 
 def nsearch(tol, x0):
@@ -164,7 +163,7 @@ def drawdf(a, b, h, ax1):
     ax1.set_ylabel("f'(x)")
 
     ax1.plot([a, b], [0, 0], c=(0, 0, 0), lw=1.2)
-    ax1.set_xlim([-2.1, 7.1])
+    ax1.set_xlim([-2.1, 10.1])
     ax1.set_ylim([-30, 40])
 
 
@@ -243,7 +242,7 @@ def main():
     print("Find:")
     interval = [-2, 10] #for drawing
     tol = 1e-5
-    [xmin, f, neval, coords] = nsearch(tol, 1.3)
+    [xmin, f, neval, coords] = nsearch(tol, 9.5) #МЕНЯЙ Х0 1-9.5, 2-0.5
     print([xmin, f, neval])
     newtondrawfig(interval, coords)
 
