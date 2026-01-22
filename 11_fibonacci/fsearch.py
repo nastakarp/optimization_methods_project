@@ -3,14 +3,11 @@ import matplotlib  # Импортирует основной модуль Matplo
 matplotlib.use('Agg')  # Устанавливает backend 'Agg' — позволяет сохранять графики в файлы без GUI (подходит для серверов/headless-режима).
 import matplotlib.pyplot as plt  # Импортирует pyplot из Matplotlib под псевдонимом plt — основной инструмент построения графиков.
 import random  # Импортирует модуль random для генерации случайных цветов при визуализации.
-'''
-def f1(x):     return -2 * np.sin(np.sqrt(abs(x / 2 + 10))) - x * np.sin(np.sqrt(abs(x - 10)))
+
+def f(x):     return -2 * np.sin(np.sqrt(abs(x / 2 + 10))) - x * np.sin(np.sqrt(abs(x - 10)))
 
 def f2(x):    return x**2-10*np.cos(0.5* np.pi*x)-110
 
-def f(x): return (x - 3) ** 2 - 3 * x + x ** 2 - 40  # Определяет целевую функцию f(x); упрощается до f(x) = 2x² - 9x - 31.
-'''
-def f(x): return x**2-10*np.cos(0.5* np.pi*x)-110
 
 def makefib(n):
     fib = [1, 1]  # Инициализирует список первых двух чисел Фибоначчи.
