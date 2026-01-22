@@ -4,11 +4,9 @@ matplotlib.use('Agg')  # Устанавливает backend 'Agg' — позво
 import matplotlib.pyplot as plt  # Импортирует pyplot из Matplotlib под псевдонимом plt — основной инструмент построения графиков.
 import random  # Импортирует модуль random для генерации случайных цветов при визуализации.
 
-def f1(x):     return -2 * np.sin(np.sqrt(abs(x / 2 + 10))) - x * np.sin(np.sqrt(abs(x - 10)))
+def f(x):     return -2 * np.sin(np.sqrt(abs(x / 2 + 10))) - x * np.sin(np.sqrt(abs(x - 10)))
 
 def f2(x):    return x**2-10*np.cos(0.5* np.pi*x)-110
-
-def f(x):     return x**2-10*np.cos(0.5* np.pi*x)-110  # Определяет целевую функцию f(x); можно упростить: f(x) = 2x² - 9x - 31 (та же, что и раньше).
 
 def gsearch(interval, tol):
     # GOLDENSECTIONSEARCH searches for minimum using golden section
