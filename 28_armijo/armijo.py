@@ -5,11 +5,11 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-def func1(x):
+def F(x):
     return -2 * np.sin(np.sqrt(abs(x / 2 + 10))) - x * np.sin(np.sqrt(abs(x - 10)))
 
 
-def dfunc1(x):
+def dF(x):
     return (-np.cos(np.sqrt(abs(x / 2 + 10))) * (x / 2 + 10)) / (2 * abs(x / 2 + 10) ** (3 / 2)) - (
         np.cos(np.sqrt(abs(x - 10))) * (x - 10) * x) / (2 * abs(x - 10) ** (3 / 2)) - np.sin(np.sqrt(abs(x - 10)))
 
@@ -252,7 +252,7 @@ def main():
     print("test function:")
     x0 = np.array([[0.0], [10.0]])
     tol = 1e-9
-    [xmin, f, neval, coords] = prsearch(func1, dfunc1, x0, tol)
+    [xmin, f, neval, coords] = prsearch(F, dF, x0, tol)
     print(xmin, f, neval)
     draw(coords,  len(coords), f, "t")
 
