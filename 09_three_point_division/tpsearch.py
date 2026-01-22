@@ -5,9 +5,12 @@ import matplotlib  # Импортирует основной модуль Matplo
 matplotlib.use('Agg')  # Устанавливает backend 'Agg' для сохранения графиков в файлы без GUI (подходит для серверов/headless-режима).
 import matplotlib.pyplot as plt  # Импортирует pyplot из Matplotlib под псевдонимом plt — основной инструмент построения графиков.
 
-def f(x): return 2 * (x ** 2) - 9 * x - 31  # Определяет целевую функцию f(x) = 2x² - 9x - 31.
+'''def f(x): return 2 * (x ** 2) - 9 * x - 31  # Определяет целевую функцию f(x) = 2x² - 9x - 31.'''
 
-#def df(x): return 4 * x - 9  # Определяет производную f'(x) = 4x - 9 (не используется в этом алгоритме, но оставлена для совместимости).
+def f1(x):     return -2 * np.sin(np.sqrt(abs(x / 2 + 10))) - x * np.sin(np.sqrt(abs(x - 10)))
+
+def f(x):    return x**2-10*np.cos(0.5* np.pi*x)-110
+
 
 def tpsearch(interval, tol):  # Функция поиска минимума методом трёхточечного поиска (похож на метод золотого сечения или трисекции).
     # searches for minimum using bisection method
