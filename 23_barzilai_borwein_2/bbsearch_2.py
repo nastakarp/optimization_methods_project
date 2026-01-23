@@ -147,9 +147,9 @@ def bbdDraw(ax, coords, nsteps):
 
 def draw(coords, nsteps, f):
     fig, ax = plt.subplots()
-    fig.suptitle('Barzilai-Borwein 1 method each step visualisation & Countour plot')
-    plt.xlim(-4, 4)
-    plt.ylim(-4, 4)
+    fig.suptitle('Barzilai-Borwein 2 method each step visualisation & Countour plot')
+    plt.xlim(-1, 3)
+    plt.ylim(-2, 2)
     plt.gca().set_aspect('equal', adjustable='box')  # Одинаковый масштаб по осям.
     bbdDraw(ax, coords, nsteps)          # Рисует траекторию метода BB.
     contourPlot(ax, f)                   # Накладывает контуры функции.
@@ -161,7 +161,7 @@ def draw(coords, nsteps, f):
 def main():
     print("Rosenbrock function:")
     x0 = np.array([2,-1])                # Начальная точка для функции Розенброка.
-    tol = 1e-9                           # Очень высокая точность.
+    tol = 1e-5                           # Очень высокая точность.
     [xmin, f, neval, coords] = bbsearch(fR, dfR, x0, tol)  # Запуск метода BB1.
     print(xmin, f, neval)
     draw(coords, len(coords), fR)        # Визуализация.

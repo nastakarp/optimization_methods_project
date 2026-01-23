@@ -7,7 +7,6 @@ import numpy as np                     # Повторный импорт (изб
 import matplotlib                      # Импортирует основной модуль Matplotlib для визуализации.
 matplotlib.use('Agg')                  # Устанавливает backend 'Agg' — позволяет сохранять графики без GUI.
 import matplotlib.pyplot as plt        # Импортирует pyplot из Matplotlib под псевдонимом plt.
-import random                          # Импортирует модуль random (не используется в основном коде).
 
 # F_HIMMELBLAU is a Himmelblau function
 # 	v = F_HIMMELBLAU(X)

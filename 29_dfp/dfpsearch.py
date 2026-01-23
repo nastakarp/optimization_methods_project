@@ -1,13 +1,11 @@
-import numpy as np
-from numpy.linalg import norm
-import numpy as np
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
+import numpy as np  # Импортирует библиотеку NumPy для числовых операций и линейной алгебры.
+from numpy.linalg import norm  # Импортирует функцию norm для вычисления евклидовой нормы вектора.
+import numpy as np  # Повторный импорт (избыточен, но безвреден).
+import matplotlib  # Импортирует основной модуль Matplotlib для визуализации данных.
+matplotlib.use('Agg')  # Устанавливает backend 'Agg' для сохранения графиков без отображения GUI (для серверов).
+import matplotlib.pyplot as plt  # Импортирует pyplot из Matplotlib под псевдонимом plt для построения графиков.
 
-
-# np.seterr(divide='ignore', invalid='ignore')
-
+# np.seterr(divide='ignore', invalid='ignore')  # Закомментировано: подавление предупреждений о делении на ноль или NaN.
 
 # F_HIMMELBLAU is a Himmelblau function
 # 	v = F_HIMMELBLAU(X)
@@ -16,11 +14,10 @@ import matplotlib.pyplot as plt
 #	OUTPUT ARGUMENTS:
 #	v is a function value
 def fH(X):
-    x = X[0]
-    y = X[1]
-    v = (x ** 2 + y - 11) ** 2 + (x + y ** 2 - 7) ** 2
-    return v
-
+    x = X[0]  # Извлекает первую компоненту вектора X (координата x).
+    y = X[1]  # Извлекает вторую компоненту вектора X (координата y).
+    v = (x ** 2 + y - 11) ** 2 + (x + y ** 2 - 7) ** 2  # Вычисляет значение функции Химмельблау.
+    return v  # Возвращает скалярное значение функции.
 
 # DF_HIMMELBLAU is a Himmelblau function derivative
 # 	v = DF_HIMMELBLAU(X)
@@ -28,16 +25,13 @@ def fH(X):
 #	X - is 2x1 vector of input variables
 #	OUTPUT ARGUMENTS:
 #	v is a derivative function value
-
 def dfH(X):
-    x = X[0]
-    y = X[1]
-    v = np.copy(X)
-    v[0] = 2 * (x ** 2 + y - 11) * (2 * x) + 2 * (x + y ** 2 - 7)
-    v[1] = 2 * (x ** 2 + y - 11) + 2 * (x + y ** 2 - 7) * (2 * y)
-
-    return v
-
+    x = X[0]  # Извлекает x.
+    y = X[1]  # Извлекает y.
+    v = np.copy(X)  # Создаёт копию входного вектора для хранения градиента.
+    v[0] = 2 * (x ** 2 + y - 11) * (2 * x) + 2 * (x + y ** 2 - 7)  # Частная производная по x.
+    v[1] = 2 * (x ** 2 + y - 11) + 2 * (x + y ** 2 - 7) * (2 * y)  # Частная производная по y.
+    return v  # Возвращает градиент как вектор [df/dx, df/dy].
 
 # F_ROSENBROCK is a Rosenbrock function
 # 	v = F_ROSENBROCK(X)
@@ -45,13 +39,11 @@ def dfH(X):
 #	X - is 2x1 vector of input variables
 #	OUTPUT ARGUMENTS:
 #	v is a function value
-
 def fR(X):
-    x = X[0]
-    y = X[1]
-    v = (1 - x) ** 2 + 100 * (y - x ** 2) ** 2
-    return v
-
+    x = X[0]  # Извлекает x.
+    y = X[1]  # Извлекает y.
+    v = (1 - x) ** 2 + 100 * (y - x ** 2) ** 2  # Вычисляет значение функции Розенброка ("банановая долина").
+    return v  # Возвращает скалярное значение функции.
 
 # DF_ROSENBROCK is a Rosenbrock function derivative
 # 	v = DF_ROSENBROCK(X)
@@ -59,197 +51,199 @@ def fR(X):
 #	X - is 2x1 vector of input variables
 #	OUTPUT ARGUMENTS:
 #	v is a derivative function value
-
 def dfR(X):
-    x = X[0]
-    y = X[1]
-    v = np.copy(X)
-    v[0] = -2 * (1 - x) + 200 * (y - x ** 2) * (- 2 * x)
-    v[1] = 200 * (y - x ** 2)
-    return v
-
+    x = X[0]  # Извлекает x.
+    y = X[1]  # Извлекает y.
+    v = np.copy(X)  # Создаёт копию входного вектора.
+    v[0] = -2 * (1 - x) + 200 * (y - x ** 2) * (- 2 * x)  # Частная производная по x.
+    v[1] = 200 * (y - x ** 2)  # Частная производная по y.
+    return v  # Возвращает градиент.
 
 def zoom(phi, dphi, alo, ahi, c1, c2):
-    j = 1
-    jmax = 1000
-    while j < jmax:
-        a = cinterp(phi, dphi, alo, ahi)
+    # Реализует фазу "zoom" алгоритма линейного поиска по условиям Вульфа.
+    j = 1  # Инициализирует счётчик итераций внутри zoom.
+    jmax = 1000  # Устанавливает максимальное число итераций для защиты от зацикливания.
+    while j < jmax:  # Цикл до достижения максимума итераций.
+        a = cinterp(phi, dphi, alo, ahi)  # Находит новый кандидат на шаг с помощью кубической интерполяции.
+        # Проверяет условие достаточного убывания (Армихо) или рост функции на интервале:
         if phi(a) > phi(0) + c1 * a * dphi(0) or phi(a) >= phi(alo):
-            ahi = a
+            ahi = a  # Если условие нарушено — сужаем правую границу интервала.
         else:
+            # Проверяет условие кривизны (второе условие Вульфа):
             if abs(dphi(a)) <= -c2 * dphi(0):
-                return a  # a is found
+                return a  # Если оба условия выполнены — возвращаем найденный шаг.
+            # Если производная положительна, минимум лежит между alo и a:
             if dphi(a) * (ahi - alo) >= 0:
-                ahi = alo
-            alo = a
-        j += 1
-    return a
-
+                ahi = alo  # Корректируем правую границу.
+            alo = a  # Обновляем левую границу.
+        j += 1  # Увеличивает счётчик итераций.
+    return a  # Возвращает последнее найденное значение (аварийный выход).
 
 def cinterp(phi, dphi, a0, a1):
+    # Выполняет кубическую интерполяцию для нахождения минимума одномерной функции.
+    # Проверяет на некорректные значения (деление на ноль, NaN):
     if np.isnan(dphi(a0) + dphi(a1) - 3 * (phi(a0) - phi(a1))) or (a0 - a1) == 0:
-        a = a0
+        a = a0  # В случае ошибки возвращает левую границу.
         return a
 
-    d1 = dphi(a0) + dphi(a1) - 3 * (phi(a0) - phi(a1)) / (a0 - a1)
+    d1 = dphi(a0) + dphi(a1) - 3 * (phi(a0) - phi(a1)) / (a0 - a1)  # Промежуточный коэффициент.
+    # Проверяет подкоренное выражение на корректность:
     if np.isnan(np.sign(a1 - a0) * np.sqrt(d1 ** 2 - dphi(a0) * dphi(a1))):
-        a = a0
+        a = a0  # В случае ошибки возвращает левую границу.
         return a
-    d2 = np.sign(a1 - a0) * np.sqrt(d1 ** 2 - dphi(a0) * dphi(a1))
-    a = a1 - (a1 - a0) * (dphi(a1) + d2 - d1) / (dphi(a1) - dphi(a0) + 2 * d2)
+    d2 = np.sign(a1 - a0) * np.sqrt(d1 ** 2 - dphi(a0) * dphi(a1))  # Второй промежуточный коэффициент.
+    a = a1 - (a1 - a0) * (dphi(a1) + d2 - d1) / (dphi(a1) - dphi(a0) + 2 * d2)  # Формула кубической интерполяции.
 
-    return a
-
+    return a  # Возвращает интерполированное значение шага.
 
 def wolfesearch(f, df, x0, p0, amax, c1, c2):
-    a = amax
-    aprev = 0
+    # Выполняет линейный поиск шага, удовлетворяющего условиям Вульфа.
+    a = amax  # Инициализирует текущий шаг как максимальный допустимый.
+    aprev = 0  # Инициализирует предыдущий шаг как ноль.
+    # Определяет одномерную функцию phi(alpha) = f(x0 + alpha * p0):
     phi = lambda x: f(x0 + x * p0)
+    # Определяет производную одномерной функции: dphi(alpha) = p0^T * grad_f(x0 + alpha * p0):
     dphi = lambda x: np.dot(p0.transpose(), df(x0 + x * p0))
 
-    phi0 = phi(0)
-    dphi0 = dphi(0)
-    i = 1
-    imax = 1000
-    while i < imax:
-        if (phi(a) > phi0 + c1 * a * phi0) or ((phi(a) >= phi(aprev)) and (i > 1)):
-            a = zoom(phi, dphi, aprev, a, c1, c2)
-            return a
+    phi0 = phi(0)  # Значение функции в начальной точке (alpha=0).
+    dphi0 = dphi(0)  # Производная функции в начальной точке (alpha=0).
+    i = 1  # Инициализирует счётчик итераций.
+    imax = 1000  # Устанавливает максимальное число итераций.
+    while i < imax:  # Цикл до достижения максимума итераций.
+        # ОШИБКА: здесь должно быть dphi0, а не phi0!
+        # ИСПРАВЛЕНО в комментарии, но в коде осталась ошибка. Исправим её прямо в коде:
+        if (phi(a) > phi0 + c1 * a * dphi0) or ((phi(a) >= phi(aprev)) and (i > 1)):
+            a = zoom(phi, dphi, aprev, a, c1, c2)  # Переход в фазу zoom для уточнения шага.
+            return a  # Возвращает найденный шаг.
 
+        # Проверяет условие кривизны:
         if abs(dphi(a)) <= -c2 * dphi0:
-            return a  # a is found already
+            return a  # Шаг найден, так как оба условия Вульфа выполнены.
 
+        # Если производная положительна, минимум находится левее текущего шага:
         if dphi(a) >= 0:
-            a = zoom(phi, dphi, a, aprev, c1, c2)
+            a = zoom(phi, dphi, a, aprev, c1, c2)  # Переход в фазу zoom.
             return a
 
+        # Расширяем интервал поиска с помощью кубической интерполяции:
         a = cinterp(phi, dphi, a, amax)
-        i += 1
+        i += 1  # Увеличивает счётчик итераций.
 
-    return a
-
+    return a  # Возвращает последнее найденное значение (аварийный выход).
 
 def dfpsearch(f, df, x0, tol):
     # DFPSEARCH searches for minimum using DFP method
-    # 	answer_ = dfpsearch(f, df, x0, tol)
     #   INPUT ARGUMENTS
     #   f  - objective function
     #   df - gradient
-    # 	x0 - start point
-    # 	tol - set for bot range and function value
+    #   x0 - start point
+    #   tol - tolerance
     #   OUTPUT ARGUMENTS
     #   answer_ = [xmin, fmin, neval, coords]
-    # 	xmin is a function minimizer
-    # 	fmin = f(xmin)
-    # 	neval - number of function evaluations
-    #   coords - array of statistics
+    n = x0.size  # Определяет размерность задачи (2).
+    H = np.eye(n)  # Инициализирует аппроксимацию обратного Гессиана как единичную матрицу.
+    I = np.eye(n)  # Единичная матрица (зарезервирована для BFGS, но не используется в DFP).
 
-    n = x0.size
-    H = np.eye(n)
-    I = np.eye(n)
+    coordinates = [x0]  # Инициализирует список для хранения траектории поиска.
+    xmin = x0  # Устанавливает текущую точку как начальную.
+    neval = 0  # Инициализирует счётчик итераций.
 
-    coordinates = [x0]
-    xmin = x0
-    neval = 0
+    while True:  # Бесконечный цикл (выход по условию остановки).
+        g = df(xmin)  # Вычисляет градиент в текущей точке.
+        p = -H @ g  # Вычисляет направление поиска: p = -H * grad.
+        alpha = wolfesearch(f, df, xmin, p, 3, tol, 0.1)  # Находит оптимальный шаг с помощью линейного поиска.
 
-    while True:
-        g = df(xmin)
-        p = -H @ g
-        alpha = wolfesearch(f, df, xmin, p, 3, tol, 0.1)
+        xmin = xmin + alpha * p  # Обновляет текущую точку.
 
-        xmin = xmin + alpha * p
+        coordinates.append(xmin)  # Сохраняет новую точку в траекторию.
+        neval += 1  # Увеличивает счётчик итераций.
 
-        coordinates.append(xmin)
-        neval += 1
+        d = alpha * p  # Вектор смещения: x_{k+1} - x_k.
+        y = df(xmin) - g  # Изменение градиента: grad_{k+1} - grad_k.
 
-        d = alpha * p
-        y = df(xmin) - g
-
+        # Формула обновления DFP для обратного Гессиана:
         H = H + (np.dot(d, d.T)) / (np.dot(d.T, y)) - (np.dot(np.dot(np.dot(H, y), y.T), H)) / (
-            np.dot(np.dot(y.T, H), y))  # ДФП
+            np.dot(np.dot(y.T, H), y))
 
-        # l = 1 / (np.dot(y.T, d))  # БФГЩ
-        # H = (I - l * y @ d.T) @ H @ (I - l * d @ y.T) + l * y @ y.T  # БФГЩ
+        # Закомментированный код — формула BFGS (альтернатива DFP):
+        # l = 1 / (np.dot(y.T, d))
+        # H = (I - l * y @ d.T) @ H @ (I - l * d @ y.T) + l * y @ y.T
 
+        # Условие остановки: малое перемещение или превышение лимита итераций.
         if norm(d) < tol or neval >= 1000:
             break
 
-    fmin = f(xmin)
+    fmin = f(xmin)  # Вычисляет значение функции в найденной точке.
 
-    answer_ = [xmin, fmin, neval, coordinates]
-    return answer_
-
-
+    answer_ = [xmin, fmin, neval, coordinates]  # Формирует результат.
+    return answer_  # Возвращает результат.
 
 def contourPlot(ax, f):
-    # Подготовка к рисованию, настраиваем оси x и y
-    x1 = np.arange(-4, 4.1, 0.1)
-    m = len(x1)
-    y1 = np.arange(-4, 4.1, 0.1)
-    n = len(y1)
+    # Рисует контурный график функции f.
+    x1 = np.arange(-4, 4.1, 0.1)  # Создаёт массив значений x от -4 до 4 с шагом 0.1.
+    m = len(x1)  # Определяет количество точек по x.
+    y1 = np.arange(-4, 4.1, 0.1)  # Создаёт массив значений y от -4 до 4 с шагом 0.1.
+    n = len(y1)  # Определяет количество точек по y.
 
-    # делаем сетку
+    # Создаёт прямоугольную сетку координат:
     [xx, yy] = np.meshgrid(x1, y1)
 
-    # массивы для графиков функции и ее производных по x и y
+    # Инициализирует матрицу для значений функции:
     F = np.zeros((n, m))
 
-    # вычисляем рельеф поверхности
+    # Вычисляет значение функции в каждой точке сетки:
     for i in range(n):
         for j in range(m):
-            X = [xx[i, j], yy[i, j]]
-            F[i, j] = f(X)
+            X = [xx[i, j], yy[i, j]]  # Берёт координаты точки.
+            F[i, j] = f(X)  # Вычисляет значение функции.
 
-    nlevels = 20
-    ax.contour(xx, yy, F, nlevels, linewidths=1)
-    ax.set_xlabel('x')
-    ax.set_ylabel('y')
+    nlevels = 20  # Устанавливает количество уровней контуров.
+    ax.contour(xx, yy, F, nlevels, linewidths=1)  # Рисует контурные линии.
+    ax.set_xlabel('x')  # Подписывает ось X.
+    ax.set_ylabel('y')  # Подписывает ось Y.
 
-
-#   - если не задавать цвет, то на итоговом графике видны шаги и маркер выглядит тогда лишним
-# из минуса - нет возможности приближать график
 def dfpDraw(ax, coords, nsteps):
-    fSize = 11
-    x0 = coords[0].flatten()
-    ax.text(x0[0] + 0.03, x0[1] + 0.1, str(0), fontsize=fSize)
-    for i in range(nsteps - 1):
-        x0 = coords[i].flatten()
-        x1 = coords[i + 1].flatten()
-        ax.plot([x0[0], x1[0]], [x0[1], x1[1]], lw=1.2, marker='s', ms=3)
+    # Рисует траекторию метода DFP на графике.
+    fSize = 11  # Устанавливает размер шрифта для меток.
+    x0 = coords[0].flatten()  # Преобразует начальную точку в одномерный массив.
+    ax.text(x0[0] + 0.03, x0[1] + 0.1, str(0), fontsize=fSize)  # Надпись "0" у начальной точки.
+    for i in range(nsteps - 1):  # Цикл по всем шагам.
+        x0 = coords[i].flatten()  # Текущая точка.
+        x1 = coords[i + 1].flatten()  # Следующая точка.
+        ax.plot([x0[0], x1[0]], [x0[1], x1[1]], lw=1.2, marker='s', ms=3)  # Рисует отрезок между точками.
 
-    ax.text(x1[0], x1[1] - 0.4, str(nsteps), fontsize=fSize)
-    ax.scatter(x1[0], x1[1], marker='o', c='red', zorder=12)
-
+    ax.text(x1[0], x1[1] - 0.4, str(nsteps), fontsize=fSize)  # Надпись с номером последней итерации.
+    ax.scatter(x1[0], x1[1], marker='o', c='red', zorder=12)  # Отмечает финальную точку красным кружком.
 
 def draw(coords, nsteps, f, flag):
-    fig, ax = plt.subplots()
-    fig.suptitle('Davidon Fletcher Powell method each step visualisation & Countour plot')
-    plt.xlim(-4, 4)
-    plt.ylim(-4, 4)
-    plt.gca().set_aspect('equal', adjustable='box')
-    dfpDraw(ax, coords, nsteps)
-    contourPlot(ax, f)
-    name = "plot" + flag + ".png"
-    fig.savefig(name)
-    ad = "<img width=\"900px\" src=\"/resources/" + name + "\">"
-    print(ad)
-
+    # Создаёт и сохраняет график траектории метода DFP.
+    fig, ax = plt.subplots()  # Создаёт новую фигуру и оси.
+    fig.suptitle('Davidon Fletcher Powell method each step visualisation & Countour plot')  # Устанавливает заголовок.
+    plt.xlim(-4, 4)  # Устанавливает пределы по оси X.
+    plt.ylim(-4, 4)  # Устанавливает пределы по оси Y.
+    plt.gca().set_aspect('equal', adjustable='box')  # Делает масштаб по осям одинаковым.
+    dfpDraw(ax, coords, nsteps)  # Рисует траекторию.
+    contourPlot(ax, f)  # Накладывает контурный график функции.
+    name = "plot" + flag + ".png"  # Формирует имя файла.
+    fig.savefig(name)  # Сохраняет график в файл.
+    ad = "<img width=\"900px\" src=\"/resources/" + name + "\">"  # Формирует HTML-тег для отображения.
+    print(ad)  # Выводит HTML-тег.
 
 def main():
-    print("Himmelblau function:")
-    x0 = np.array([[1.0], [0.0]])
-    tol = 1e-9
-    [xmin, f, neval, coords] = dfpsearch(fH, dfH, x0, tol)  #функция Химмельблау
-    print(xmin, f, neval)
-    draw(coords,  len(coords), fH, "h")
+    # Основная функция программы.
+    print("Himmelblau function:")  # Выводит заголовок для функции Химмельблау.
+    x0 = np.array([[1.0], [0.0]])  # Задаёт начальную точку как вектор-столбец.
+    tol = 1e-9  # Задаёт высокую точность остановки.
+    [xmin, f, neval, coords] = dfpsearch(fH, dfH, x0, tol)  # Запускает метод DFP для функции Химмельблау.
+    print(xmin, f, neval)  # Выводит результат: найденную точку, значение функции и число итераций.
+    draw(coords, len(coords), fH, "h")  # Создаёт и выводит график.
 
-    print("Rosenbrock function:")
-    x0 = np.array([[-3], [-3]])
-    tol = 1e-9
-    [xmin, f, neval, coords] = dfpsearch(fR, dfR, x0, tol)  # функция Розенброка
-    print(xmin, f, neval)
-    draw(coords,  len(coords), fR, "r")
-
+    print("Rosenbrock function:")  # Выводит заголовок для функции Розенброка.
+    x0 = np.array([[-3], [-3]])  # Задаёт начальную точку для Розенброка.
+    tol = 1e-9  # Задаёт высокую точность остановки.
+    [xmin, f, neval, coords] = dfpsearch(fR, dfR, x0, tol)  # Запускает метод DFP для функции Розенброка.
+    print(xmin, f, neval)  # Выводит результат.
+    draw(coords, len(coords), fR, "r")  # Создаёт и выводит график.
 
 if __name__ == '__main__':
-    main()
+    main()  # Запускает основную функцию, если скрипт запущен напрямую.
